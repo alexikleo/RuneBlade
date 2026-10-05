@@ -1,5 +1,11 @@
 # Runeblade
 
+## Play online with GitHub Pages
+
+In the repository's **Settings → Pages → Build and deployment**, set **Source** to **GitHub Actions**. The `Deploy game to GitHub Pages` workflow builds and publishes the game whenever `main` changes. You can also run it manually from the **Actions** tab.
+
+After a successful deployment, play at https://alexikleo.github.io/RuneBlade/. Browser saves stay in the browser you use. Subsequent pushes to `main` update the same link.
+
 ## Develop remotely with GitHub Codespaces
 
 On GitHub, select **Code → Codespaces → Create codespace**. The included dev container installs Node.js 22 and the project dependencies automatically.
