@@ -31,16 +31,14 @@ jobs:
         uses: actions/configure-pages@v5
       - run: pnpm install --frozen-lockfile
       - name: Build static game
-        run: pnpm build
+        run: pnpm build:pages
         env:
           PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
-      - name: Prepare static output for Pages
-        run: node scripts/prepare-pages.cjs
-        env:
-          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+      - name: Verify static output
+        run: test -f dist/pages/index.html && touch dist/pages/.nojekyll
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/client
+          path: dist/pages
 
   deploy:
     needs: build
