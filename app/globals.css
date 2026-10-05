@@ -21,3 +21,56 @@
 .ability-row{display:flex;gap:8px}.ability-row .throw-shield{min-width:0}
 
 .legendary-slots{display:flex;gap:6px}.legendary-slots>div{flex:1;border:1px solid #637384;border-radius:9px;padding:10px 3px;background:#182b35}.legendary-slots span{display:block;font-size:25px}.legendary-slots b{font-size:10px}.legendary-list{display:grid;gap:12px}.legendary-list article{border:1px solid;border-radius:12px;padding:15px;background:linear-gradient(135deg,#26394a,#14212a)}.legendary-list h3{margin:5px;font-size:18px}.legendary-icon{font-size:32px}.legendary-list button{background:#354c5b;color:#fff;border:1px solid #8fa7b5;border-radius:7px;padding:10px;width:100%}.legendary-list button:disabled{opacity:.45}
+
+/* Keep the 400 × 610 battlefield proportional at every viewport size. */
+.arena{background:#0a151d;min-width:0}
+.arena>canvas{object-fit:contain}
+.game>header,.game>.stats,.game>footer{flex-shrink:0;min-width:0}
+.overlay{overscroll-behavior:contain;scrollbar-gutter:stable}
+.start-card{flex-shrink:0;min-width:0}
+
+/* Laptop controls sit beside the battlefield, leaving it the full screen height. */
+@media(min-width:801px){
+  main{height:100dvh;min-height:0;padding:16px;gap:clamp(20px,3vw,48px)}
+  .desktop-note{width:200px;flex:0 0 200px}
+  .desktop-note h1{font-size:44px}
+  .desktop-note p{font-size:21px}
+  .key-hint{margin-top:32px}
+  .game{display:grid;grid-template-columns:minmax(0,1fr) 280px;grid-template-rows:auto auto minmax(0,1fr);width:100%;max-width:960px;height:100%;min-height:0;flex:1;border-radius:12px}
+  .game>.arena{grid-column:1;grid-row:1 / 4;border-right:1px solid #34454c}
+  .game>header{grid-column:2;grid-row:1;flex-wrap:wrap;gap:12px;padding:18px}
+  .game>header>div{width:100%}
+  .game .sound-button{margin:0}
+  .game .icon-button{margin-left:auto}
+  .game>.stats{grid-column:2;grid-row:2;padding:12px 18px}
+  .game>footer{grid-column:2;grid-row:3;overflow:auto;padding:20px 18px;display:flex;flex-direction:column;justify-content:safe center}
+  .game .stamina-label{font-size:11px;gap:8px}
+  .game meter{flex-shrink:0}
+  .game .controls{flex-direction:column;gap:12px;margin-top:20px}
+  .game .combat{flex:none;min-height:110px}
+  .game .ability-row{flex-direction:column;gap:0}
+  .game .throw-shield{min-height:40px;flex:none}
+  .game .stage-label{line-height:1.6;margin-top:18px}
+  .game .overlay{padding:24px}
+  .game .start-card{max-width:400px}
+  .game .start-card>p{max-width:360px}
+  .game .crest{display:flex}
+}
+@media(min-width:801px) and (max-width:1199px){
+  .desktop-note{display:none}
+}
+@media(min-width:801px) and (max-height:680px){
+  main{padding:8px}
+  .game>header{padding:12px 18px;gap:8px}
+  .game>footer{padding:12px 18px}
+  .game .combat{min-height:78px}
+  .game .controls{margin-top:12px;gap:8px}
+  .game .stage-label{margin-top:10px}
+}
+@media(max-width:800px){
+  .game{flex-shrink:0}
+  .game>header{gap:6px;padding-left:14px;padding-right:14px}
+  .game .chapter{font-size:16px}
+  .game .sound-button{margin-right:0;flex-shrink:0}
+  .game .icon-button{flex-shrink:0}
+}
