@@ -1,0 +1,16 @@
+from pathlib import Path
+p=Path('app/page.tsx');s=p.read_text();s=s.replace('shield:number };','shield:number; unlocked?:number; equipped?:number };')
+s=s.replace('const costs=',"const weapons=[{name:'Iron sword',cost:0,damage:2,color:'#e5edf0'},{name:'Knight’s blade',cost:80,damage:3,color:'#f2ce80'},{name:'Runic sword',cost:200,damage:4.5,color:'#8ceaff'}];\nconst costs=")
+s=s.replace('function buy(branch:',"function equipWeapon(index:number){if(!ready.current||game.current.mode==='playing'||game.current.mode==='paused'||!Number.isInteger(index)||index<0||index>=weapons.length)return;const current=progress.current,unlocked=current.unlocked??0;if(index>unlocked+1)return;if(index>unlocked&&current.coins<weapons[index].cost)return;persist({...current,coins:current.coins-(index>unlocked?weapons[index].cost:0),unlocked:Math.max(unlocked,index),equipped:index});}\n function buy(branch:")
+s=s.replace('shield:valid(raw.shield,3)}','shield:valid(raw.shield,3),unlocked:valid(raw.unlocked,2),equipped:Math.min(valid(raw.equipped,2),valid(raw.unlocked,2))}')
+s=s.replace('e.hp-=2+progress.current.sword*.5','e.hp-=weapons[progress.current.equipped??0].damage+progress.current.sword*.5')
+s=s.replace("shooting&&g.mode==='playing');","shooting&&g.mode==='playing',progress.current.equipped??0);")
+s=s.replace('${(2+saved.sword*.5).toFixed(1)} damage','${(weapons[saved.equipped??0].damage+saved.sword*.5).toFixed(1)} damage')
+needle='<button className="primary" onClick={()=>setShop(false)}>Back to run</button>'
+s=s.replace(needle,'''<h3>Armoury</h3><p className="footnote">Unlock swords in order. Sword mastery adds to every blade.</p><div className="upgrade-list">{weapons.map((weapon,index)=><div className="upgrade" key={weapon.name}><strong style={{color:weapon.color}}><Sword size={20} style={{display:'inline',marginRight:8}}/>{weapon.name}</strong><span>{(weapon.damage+saved.sword*.5).toFixed(1)} sword damage including mastery</span><button disabled={!loaded||index===(saved.equipped??0)||index>(saved.unlocked??0)+1||(index>(saved.unlocked??0)&&saved.coins<weapon.cost)} onClick={()=>equipWeapon(index)}>{index===(saved.equipped??0)?'Equipped':index<=(saved.unlocked??0)?'Equip':index>(saved.unlocked??0)+1?'Unlock Knight’s blade first':`Unlock & equip · ${weapon.cost} coins`}</button></div>)}</div>'''+needle)
+s=s.replace('Upgrades · {saved.coins}','Upgrades & weapons · {saved.coins}')
+s=s.replace('<span className="chapter">The endless road</span>','<span className="chapter">{weapons[saved.equipped??0].name}</span>')
+p.write_text(s)
+p=Path('app/runner.ts');s=p.read_text().replace('casting: boolean)', 'casting: boolean, weapon = 0)')
+s=s.replace("ctx.fillStyle=casting?'#b9f3ff':'#e5edf0';", "ctx.scale(weapon===1?1.25:1,weapon===2?1.15:1);ctx.fillStyle=casting?'#b9f3ff':['#e5edf0','#f2ce80','#8ceaff'][weapon];")
+s=s.replace('if(casting){','if(casting||weapon===2){');p.write_text(s)

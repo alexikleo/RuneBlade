@@ -1,0 +1,20 @@
+from pathlib import Path
+p=Path('app/page.tsx');s=p.read_text(encoding='utf-8');s='\n'.join(line for line in s.splitlines() if line.strip())+'\n'
+s=s.replace("import { drawRunner }", "import { sound, unlockAudio, setSound, closeAudio } from './audio';\nimport { drawEnemy, burst, drawEffects, clearEffects } from './effects';\nimport { drawRunner }")
+s=s.replace(' const ready=useRef(false);'," const ready=useRef(false);\n const [muted,setMuted]=useState(false);\n useEffect(()=>{try{const mute=localStorage.getItem('runeblade-muted')==='true';setMuted(mute);setSound(!mute);}catch{}return()=>closeAudio();},[]);\n function toggleSound(){const next=!muted;setMuted(next);setSound(!next);try{localStorage.setItem('runeblade-muted',String(next));}catch{}}")
+s=s.replace('function start(){','function start(){unlockAudio();clearEffects();')
+s=s.replace('g.slash=.22;','sound(\'slash\');g.slash=.22;')
+s=s.replace('e.flash=.15;',"e.flash=.15;burst(e.x,e.y,'#f8d28c');")
+s=s.replace('g.bolts.push({x:200,y:510});',"sound('bolt');g.bolts.push({x:200,y:510});")
+s=s.replace('target.flash=.1;',"target.flash=.1;burst(target.x,target.y,'#8deaff');")
+s=s.replace("g.notice='BLOCKED';","g.notice='BLOCKED';sound('block');burst(200,495,'#b1eaff');")
+s=s.replace("g.notice='HIT';","g.notice='HIT';sound('hurt');")
+s=s.replace('g.coins+=g.enemies.filter',"for(const defeated of g.enemies.filter(e=>e.hp<=0))burst(defeated.x,defeated.y,'#e8b96d');\n    g.coins+=g.enemies.filter")
+s=s.replace('g.rest=3;',"sound('clear');g.rest=3;")
+s=s.replace("g.noticeTime=2;}}","g.noticeTime=2;if(g.wave%5===0)sound('boss');}}")
+a=s.index("ctx.fillStyle='#0005';",s.index('for(const e of g.enemies)',s.index('const ctx=')));b=s.index("ctx.fillStyle='#33444a';",a)
+s=s[:a]+"drawEnemy(ctx,e,g.time);"+s[b:]
+s=s.replace('    if(g.hurt>0)',"    drawEffects(ctx,g.mode==='playing'?dt:0);\n    if(g.hurt>0)")
+s=s.replace('UPGRADES · PHASE 04','COMBAT POLISH · PHASE 05')
+s=s.replace('<button className="icon-button" onClick={pause}', '<button className="sound-button" aria-pressed={muted} onClick={toggleSound}>{muted?\'Sound off\':\'Sound on\'}</button><button className="icon-button" onClick={pause}')
+p.write_text(s,encoding='utf-8')

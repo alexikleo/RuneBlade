@@ -1,17 +1,28 @@
-# Runeblade — Stage 01
+# Runeblade
 
-Portrait browser prototype: hero at the bottom, enemies from above.
+## Develop remotely with GitHub Codespaces
 
-Play: tap the right control for sword; hold right for magic; hold left for shield.
-Desktop: Space for attack, Shift for shield, Escape to pause.
-Survive 60 seconds and clear remaining enemies. Five hits end a run.
+On GitHub, select **Code → Codespaces → Create codespace**. The included dev container installs Node.js 22 and the project dependencies automatically.
 
-Current scope: one enemy, sword range, bolts, block timing, stamina, pause and restart.
-Next stages (after play feedback): coins and a first level, then skill tree and weapons.
-Art is temporary emoji artwork, and difficulty is intentionally introductory.
+Run `pnpm dev --host 0.0.0.0 --port 3000`, then open port 3000 from the Ports panel to play. Run `pnpm build` to create a production build. Run `node scripts/combat-check.cjs`, `node scripts/balance-check.cjs`, and `pnpm exec tsc --noEmit` to validate changes.
 
-Development: pnpm dev
-Production: pnpm build
-Validation: node scripts/combat-check.cjs
+Commit and push your changes to save them back to GitHub. Browser game saves are local to that browser and are not included in the repository. Codespaces runs the web game; packaging for the iPhone App Store is a separate step.
 
-WebMCP: optional read_trial_status exposes run state where supported. No supported browser WebMCP validation context was available; its live registration remains unverified.
+Portrait endless fantasy runner. Tap right/Space for sword, hold for magic, hold left/Shift for shield. Escape pauses.
+
+## Start the game
+
+Double-click `Start Game.cmd` in this folder. It starts the server in the background, waits for the game to respond, then opens http://localhost:3000/ in your default browser. If the game is already running, it reuses it. Run the launcher again after restarting your computer. You can also refresh the same URL inside Codex. Saves belong to the browser you use, so use the same browser to keep your progress.
+
+Keep the launcher in this folder; create a Windows shortcut to it if you want it elsewhere. Startup diagnostics are in `.local-game/server.log` and `server-error.log`.
+
+## Current game
+
+Endless waves, archers and bosses; speed responds to crowds. Persistent coins, skill upgrades, three swords and advanced abilities. Smooth cartoon scenery and characters, ranked magic effects, weapon-colored sword trails and shield impact ripples.
+
+Validation: `node scripts/combat-check.cjs` and `node node_modules/typescript/bin/tsc --noEmit`.
+Build: `pnpm build`. Local development: `pnpm dev`.
+
+iPhone touch testing and publishing remain deferred.
+
+Temporary pickups: Sword Frenzy (8s), Arcane Storm (10s), Iron Guard (12s), Coin Magnet (15s), Second Wind (+1 heart), Frost Aura (6s), Flame Blade (10s), Lightning Chain (8s), Guardian Spirit (20s or one fatal hit). Normal enemies have a 16% drop chance; bosses guarantee one. Rare powers comprise 22% of drops. Different powers stack, duplicates refresh, pause freezes timers and restart clears them. Flame hits burn for 3 seconds; lightning jumps to two nearby foes. Powers are collected automatically as the hero reaches them.

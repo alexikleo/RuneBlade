@@ -1,0 +1,13 @@
+from pathlib import Path
+p=Path('app/page.tsx');s=p.read_text(encoding='utf-8-sig')
+s=s.replace('time:0,wave:1','time:0,runSpeed:125,distance:0,wave:1')
+s=s.replace('e.y>430&&e.hp>0',"e.y+(e.kind==='boss'?36:0)>430&&e.hp>0")
+s=s.replace('Math.abs(e.y-b.y)<27&&Math.abs(e.x-b.x)<35',"Math.abs(e.y-b.y)<(e.kind==='boss'?46:27)&&Math.abs(e.x-b.x)<(e.kind==='boss'?46:35)")
+s=s.replace('music(g.time);const earnedBefore',"const pressure=g.enemies.filter(e=>e.hp>0&&e.y>365).reduce((sum,e)=>sum+(e.kind==='boss'?1.5:1)*Math.min(1,(e.y-365)/80),0);const targetSpeed=Math.max(75,245-pressure*55);g.runSpeed+=Math.max(-160*dt,Math.min(38*dt,targetSpeed-g.runSpeed));g.runSpeed=Math.max(75,Math.min(245,g.runSpeed));g.distance+=g.runSpeed*dt;\n    music(g.time);const earnedBefore")
+s=s.replace('e.y+=e.speed*dt','e.y+=(e.speed+Math.max(0,g.runSpeed-125)*.3)*dt')
+s=s.replace('g.time*125%80','g.distance%80').replace('drawRoadside(ctx,g.time)','drawRoadside(ctx,g.distance/125)').replace('drawRunner(ctx,g.time,','drawRunner(ctx,g.distance/125,')
+s=s.replace("ctx.fillStyle='#33444a';ctx.fillRect(e.x-18,e.y-32,36,4);ctx.fillStyle=e.flash?'#fff':'#de8c74';ctx.fillRect(e.x-18,e.y-32,36*Math.max(0,e.hp)/e.maxHp,4);", "if(e.kind!=='boss'){ctx.fillStyle='#33444a';ctx.fillRect(e.x-18,e.y-32,36,4);ctx.fillStyle=e.flash?'#fff':'#de8c74';ctx.fillRect(e.x-18,e.y-32,36*Math.max(0,e.hp)/e.maxHp,4);}")
+s=s.replace('    drawEffects(ctx',"    const boss=g.enemies.find(e=>e.kind==='boss'&&e.hp>0);if(boss){ctx.fillStyle='#101820ee';ctx.fillRect(66,8,268,48);ctx.fillStyle='#f2d3a1';ctx.font='bold 14px system-ui';ctx.fillText(`WARDEN · ${Math.ceil(boss.hp)} / ${Math.ceil(boss.maxHp)} HP`,200,27);ctx.fillStyle='#4b3036';ctx.fillRect(78,36,244,9);ctx.fillStyle=boss.flash?'#fff':'#ec8d79';ctx.fillRect(78,36,244*Math.max(0,boss.hp)/boss.maxHp,9);}\n    drawEffects(ctx")
+s=s.replace('time:g.time,wave:g.wave','time:g.time,runSpeed:g.runSpeed,distance:g.distance,wave:g.wave')
+s=s.replace('<div className="stage-label">','<div className="stage-label"><span>{Math.round(hud.runSpeed/125*100)}% PACE · </span>')
+p.write_text(s,encoding='utf-8')
