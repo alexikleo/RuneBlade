@@ -40,6 +40,41 @@ export function drawEnvironment(c:CanvasRenderingContext2D,distance:number,time:
   for(let row=-1;row<5;row++){const y=row*170+mod(distance,170);for(const x of [35,365]){c.fillStyle='#2a2430';c.beginPath();c.moveTo(x-25,y+55);c.lineTo(x-18,y-31);c.lineTo(x+7,y-46);c.lineTo(x+23,y-15);c.lineTo(x+24,y+56);c.closePath();c.fill();c.strokeStyle='#786071';c.lineWidth=3;c.stroke();c.strokeStyle='#ff9860';c.lineWidth=2;c.beginPath();c.moveTo(x,y-25);c.lineTo(x-6,y-2);c.lineTo(x+7,y+12);c.lineTo(x-3,y+30);c.stroke();glow(x,y+4,27,'#ef794c');}}
   for(let i=0;i<22;i++){const x=i%2?350+Math.sin(i)*33:35+Math.sin(i)*30,y=mod(i*43+distance*.6-time*23,650);ellipse(x,y,1+(i%2),2,'#ffc186');}
  }
+ // Regional wear breaks up the paving: moss, frost, sand and shallow water.
+ for(let i=0;i<9;i++){
+  const x=i%2?315:85,y=mod(i*89+distance,790)-90;
+  if(region===1||region===7){
+   for(let j=0;j<4;j++)ellipse(x+(j%2?1:-1)*j*3,y+j*7,8-j,4,region===1?'#52754a55':'#64743e55');
+  }else if(region===3){
+   ellipse(x,y,14,30,'#d3e7ed38');c.strokeStyle='#d9f5ff66';c.lineWidth=1;c.beginPath();c.moveTo(x-4,y-10);c.lineTo(x+2,y);c.lineTo(x-3,y+8);c.stroke();
+  }else if(region===6){
+   ellipse(x,y,19,34,'#c5a16a35');c.strokeStyle='#dec59344';c.lineWidth=1;for(let j=0;j<3;j++){c.beginPath();c.ellipse(x,y+j*7,15,3,0,0,Math.PI);c.stroke();}
+  }else if(region===5){
+   ellipse(x,y,15,26,'#347b8933');c.strokeStyle='#9cddd533';c.lineWidth=1;c.beginPath();c.ellipse(x,y,10,17,0,0,Math.PI);c.stroke();
+  }
+ }
+ // Inlaid curbs and irregular rubble anchor the road in its surroundings.
+ const accent=['#bca882','#8dba8b','#dd9a70','#c4e5ed','#b59ad4','#8ccecb','#dcc08b','#96ad78','#d6d8c3','#b19acd'][region];
+ for(const side of [-1,1]){
+  const x=side<0?63:337;
+  c.fillStyle=base[0];c.fillRect(x-5,0,10,610);
+  for(let i=-1;i<13;i++){const y=i*54+mod(distance,54);const bevel=c.createLinearGradient(x-4,0,x+4,0);bevel.addColorStop(0,base[2]);bevel.addColorStop(.5,base[1]);bevel.addColorStop(1,base[0]);c.fillStyle=bevel;c.fillRect(x-4,y,8,50);c.fillStyle=accent+'44';c.fillRect(x-3,y+1,5,1);}
+ }
+ // Sparse chips and moss stay at the edges rather than behind incoming attacks.
+ for(let i=0;i<18;i++){
+  const x=i%2?310+(i*13%20):72+(i*17%20),y=mod(i*97+distance,720)-55;
+  ellipse(x+2,y+3,6,3,'#00000045');ellipse(x,y,3+i%3,2+i%2,base[2]);
+  c.strokeStyle=accent+'55';c.lineWidth=1;c.beginPath();c.moveTo(x-2,y-1);c.lineTo(x+2,y-2);c.stroke();
+  if(region===1||region===7){c.strokeStyle=region===1?'#719269':'#7a9156';c.beginPath();c.moveTo(x,y+7);c.quadraticCurveTo(x-6,y-2,x-8,y);c.moveTo(x,y+7);c.quadraticCurveTo(x+3,y-4,x+6,y-3);c.stroke();}
+ }
+ // Low drifting mist and soft edge shadows give depth without obscuring the lane.
+ c.save();
+ for(let i=0;i<4;i++){
+  const x=i%2?390:10,y=mod(i*181+distance*.3+time*5,800)-90;
+  const mist=c.createRadialGradient(x,y,5,x,y,105);mist.addColorStop(0,accent+'12');mist.addColorStop(1,accent+'00');c.fillStyle=mist;c.fillRect(x-105,y-105,210,210);
+ }
+ const edge=c.createLinearGradient(0,0,400,0);edge.addColorStop(0,'#030a18aa');edge.addColorStop(.2,'#030a1800');edge.addColorStop(.8,'#030a1800');edge.addColorStop(1,'#030a18aa');c.fillStyle=edge;c.fillRect(0,0,400,610);
+ c.restore();
  // Gentle lighting across the road, leaving foes and warnings drawn above it.
  const shade=c.createLinearGradient(0,0,0,610);shade.addColorStop(0,'#060c1d55');shade.addColorStop(.35,'#00000000');shade.addColorStop(1,'#050c1718');c.fillStyle=shade;c.fillRect(0,0,400,610);
 }
